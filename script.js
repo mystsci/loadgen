@@ -85,7 +85,7 @@ window.addEventListener("load", () => {
     outputText = "";
   });
 
-  document.querySelector("#input").addEventListener("change", () => {
+  document.querySelector("#input").addEventListener("input", () => {
     inputText = inputAreaElement.value;
 
     console.log(inputText);
