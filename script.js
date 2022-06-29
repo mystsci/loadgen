@@ -1,3 +1,5 @@
+let forWho;
+
 window.addEventListener("load", () => {
   let inputText;
   const inputAreaElement = document.querySelector("#input");
@@ -5,7 +7,6 @@ window.addEventListener("load", () => {
   const outputAreaElement = document.querySelector("#output");
 
   document.querySelector("#submitBtn").addEventListener("click", () => {
-    inputText = inputAreaElement.value;
     const lines = inputText
       .slice(inputText.indexOf("ZALADUNEK"))
       .split(/\r?\n/g);
@@ -18,6 +19,18 @@ window.addEventListener("load", () => {
         (dataKeys.push(lines[i].slice(0, colonIndex).trim()),
         dataValues.push(lines[i].slice(colonIndex + 1).trim()));
     }
+
+    //Info for who is this job
+
+    document.querySelector("#forWho").style.backgroundColor = "white";
+    document.querySelector("#forWho").style.color = "green";
+
+    if (inputText.match(/MB \d\d/)) {
+      forWho = inputText.match(/MB \d\d/)[0];
+    }
+
+    document.querySelector("#forWho").innerText = forWho;
+
     //Basic info for driver, when to do that job
     let when = document.querySelector("#when").value.toUpperCase();
     dataKeys.unshift(`${when} PO ROZLADUNKU PROSZE JECHAC NA`);
@@ -67,10 +80,25 @@ window.addEventListener("load", () => {
 
     for (let i = 0; i < dataKeys.length; i++) {
       outputText += `${dataKeys[i]} : ${dataValues[i]} \n`;
-      console.log(outputText);
     }
     outputAreaElement.value = outputText;
     outputText = "";
+  });
+
+  document.querySelector("#input").addEventListener("change", () => {
+    inputText = inputAreaElement.value;
+
+    console.log(inputText);
+    if (
+      inputText.match(/MB \d\d/) == null ||
+      inputText.match(/MB \d\d/)[0] != forWho
+    ) {
+      document.querySelector("#forWho").style.backgroundColor = "red";
+      document.querySelector("#forWho").style.color = "white";
+    } else {
+      document.querySelector("#forWho").style.backgroundColor = "white";
+      document.querySelector("#forWho").style.color = "green";
+    }
   });
 
   const copyReadyLoad = () => {
@@ -80,7 +108,6 @@ window.addEventListener("load", () => {
     copyText.setSelectionRange(0, 99999);
 
     navigator.clipboard.writeText(copyText.value);
-    console.log(navigator);
   };
 
   const copyBtnElement = document.querySelector("#copyBtn");
